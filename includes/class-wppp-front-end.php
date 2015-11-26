@@ -1,4 +1,4 @@
-<?PHP
+<?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
@@ -26,7 +26,7 @@ class WPPP_Front_End {
 			add_action( 'woocommerce_before_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
 		elseif ( $location == 'bottom' ) :
 			add_action( 'woocommerce_after_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
-		elseif ( $location == 'topbottom' ):
+		elseif ( $location == 'topbottom' ) :
 			add_action( 'woocommerce_before_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
 			add_action( 'woocommerce_after_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
 		endif;
@@ -62,8 +62,8 @@ class WPPP_Front_End {
 		global $wp_query;
 
 		$action = '';
-		$cat 	= '';
-		$cat 	= $wp_query->get_queried_object();
+		$cat    = '';
+		$cat    = $wp_query->get_queried_object();
 		$method = in_array( get_option( 'wppp_method', 'post' ), array( 'post', 'get' ) ) ? get_option( 'wppp_method', 'post' ) : 'post';
 
 		// Set the products per page options (e.g. 4, 8, 12)
@@ -88,11 +88,11 @@ class WPPP_Front_End {
 
 		?><form method="<?php echo esc_attr( $method ); ?>" action="<?php echo esc_url( $action ); ?>" style='float: right; margin-left: 5px;' class="form-wppp-select products-per-page"><?php
 
-			 do_action( 'wppp_before_dropdown' );
+				do_action( 'wppp_before_dropdown' );
 
 			?><select name="ppp" onchange="this.form.submit()" class="select wppp-select"><?php
 
-				foreach( $products_per_page_options as $key => $value ) :
+				foreach ( $products_per_page_options as $key => $value ) :
 
 					?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $this->loop_shop_per_page() ); ?>><?php
 						$ppp_text = apply_filters( 'wppp_ppp_text', __( '%s products per page', 'woocommerce-products-per-page' ), $value );
@@ -110,11 +110,11 @@ class WPPP_Front_End {
 					continue;
 				endif;
 				if ( is_array( $val ) ) :
-					foreach( $val as $inner_val ) :
-						?><input type="hidden" name="<?php echo esc_attr( $key ); ?>[]" value="<?php echo esc_attr( $inner_val ); ?>" /><?php
+					foreach ( $val as $inner_val ) :
+						?><input type='hidden' name="<?php echo esc_attr( $key ); ?>[]" value="<?php echo esc_attr( $inner_val ); ?>" /><?php
 					endforeach;
 				else :
-					?><input type="hidden" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $val ); ?>" /><?php
+					?><input type='hidden' name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $val ); ?>" /><?php
 				endif;
 			endforeach;
 
@@ -134,7 +134,7 @@ class WPPP_Front_End {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @return int Number of columns.
+	 * @return	int	Number of columns.
 	 */
 	public function loop_shop_columns( $columns ) {
 
@@ -154,7 +154,7 @@ class WPPP_Front_End {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @return int Products per page.
+	 * @return	int	Products per page.
 	 */
 	public function loop_shop_per_page() {
 
@@ -178,9 +178,9 @@ class WPPP_Front_End {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @param	object 	$q		Existing query object.
+	 * @param	object	$q		Existing query object.
 	 * @param	object	$class	Class object.
-	 * @return 	object 			Modified query object.
+	 * @return	object			Modified query object.
 	 */
 	public function woocommerce_product_query( $q, $class ) {
 
