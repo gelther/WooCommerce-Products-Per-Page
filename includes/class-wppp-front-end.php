@@ -1,5 +1,5 @@
 <?PHP
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
 
 /**
  * Class WPPP_Front_End.
@@ -21,30 +21,30 @@ class WPPP_Front_End {
 	public function __construct() {
 
 		// Set dropdowns
-		$location = get_option( 'wppp_dropdown_location', 'none' );
+		$location = get_option('wppp_dropdown_location', 'none');
 		if ( $location == 'top' ) :
-			add_action( 'woocommerce_before_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
+			add_action('woocommerce_before_shop_loop', array($this, 'products_per_page_dropdown'), 25);
 		elseif ( $location == 'bottom' ) :
-			add_action( 'woocommerce_after_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
+			add_action('woocommerce_after_shop_loop', array($this, 'products_per_page_dropdown'), 25);
 		elseif ( $location == 'topbottom' ):
-			add_action( 'woocommerce_before_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
-			add_action( 'woocommerce_after_shop_loop', array( $this, 'products_per_page_dropdown' ), 25 );
+			add_action('woocommerce_before_shop_loop', array($this, 'products_per_page_dropdown'), 25);
+			add_action('woocommerce_after_shop_loop', array($this, 'products_per_page_dropdown'), 25);
 		endif;
 
 		// Add filter for product columns
-		add_filter( 'loop_shop_columns', array( $this, 'loop_shop_columns' ) );
+		add_filter('loop_shop_columns', array($this, 'loop_shop_columns'));
 
 		// Custom number of products per page
-		add_filter( 'loop_shop_per_page', array( $this, 'loop_shop_per_page' ) );
+		add_filter('loop_shop_per_page', array($this, 'loop_shop_per_page'));
 
 		// Get the right amount of products from the DB
-		add_action( 'woocommerce_product_query', array( $this, 'woocommerce_product_query' ), 2, 50 );
+		add_action('woocommerce_product_query', array($this, 'woocommerce_product_query'), 2, 50);
 
 		// Set cookie so PPP will be saved
-		add_action( 'init', array( $this, 'set_customer_session' ), 10 );
+		add_action('init', array($this, 'set_customer_session'), 10);
 
 		// Check if ppp form is fired
-		add_action( 'init', array( $this, 'products_per_page_action' ) );
+		add_action('init', array($this, 'products_per_page_action'));
 
 	}
 
@@ -64,19 +64,19 @@ class WPPP_Front_End {
 		$action = '';
 		$cat 	= '';
 		$cat 	= $wp_query->get_queried_object();
-		$method = in_array( get_option( 'wppp_method', 'post' ), array( 'post', 'get' ) ) ? get_option( 'wppp_method', 'post' ) : 'post';
+		$method = in_array(get_option('wppp_method', 'post'), array('post', 'get')) ? get_option('wppp_method', 'post') : 'post';
 
 		// Set the products per page options (e.g. 4, 8, 12)
-		$products_per_page_options = explode( ' ', apply_filters( 'wppp_products_per_page', get_option( 'wppp_dropdown_options' ) ) );
+		$products_per_page_options = explode(' ', apply_filters('wppp_products_per_page', get_option('wppp_dropdown_options')));
 
 		// Set action url if option behaviour is true
 		// Paste QUERY string after for filter and orderby support
-		$query_string = ! empty( $_SERVER['QUERY_STRING'] ) ? '?' . add_query_arg( array( 'ppp' => false ), $_SERVER['QUERY_STRING'] ) : null;
+		$query_string = ! empty($_SERVER['QUERY_STRING']) ? '?' . add_query_arg(array('ppp' => false), $_SERVER['QUERY_STRING']) : null;
 
-		if ( isset( $cat->term_id ) && isset( $cat->taxonomy ) && 'yes' == get_option( 'wppp_return_to_first', 'no' ) ) :
-			$action = get_term_link( $cat->term_id, $cat->taxonomy ) . $query_string;
-		elseif ( 'yes' == get_option( 'wppp_return_to_first', 'no' ) ) :
-			$action = get_permalink( woocommerce_get_page_id( 'shop' ) ) . $query_string;
+		if ( isset($cat->term_id) && isset($cat->taxonomy) && 'yes' == get_option('wppp_return_to_first', 'no') ) :
+			$action = get_term_link($cat->term_id, $cat->taxonomy) . $query_string;
+		elseif ( 'yes' == get_option('wppp_return_to_first', 'no') ) :
+			$action = get_permalink(woocommerce_get_page_id('shop')) . $query_string;
 		endif;
 
 		// Only show on product categories
@@ -84,19 +84,19 @@ class WPPP_Front_End {
 			return;
 		endif;
 
-		do_action( 'wppp_before_dropdown_form' );
+		do_action('wppp_before_dropdown_form');
 
 		?><form method="<?php echo esc_attr( $method ); ?>" action="<?php echo esc_url( $action ); ?>" style='float: right; margin-left: 5px;' class="form-wppp-select products-per-page"><?php
 
-			 do_action( 'wppp_before_dropdown' );
+			 do_action('wppp_before_dropdown');
 
 			?><select name="ppp" onchange="this.form.submit()" class="select wppp-select"><?php
 
 				foreach( $products_per_page_options as $key => $value ) :
 
-					?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $this->loop_shop_per_page() ); ?>><?php
-						$ppp_text = apply_filters( 'wppp_ppp_text', __( '%s products per page', 'woocommerce-products-per-page' ), $value );
-						esc_html( printf( $ppp_text, $value == -1 ? __( 'All', 'woocommerce-products-per-page' ) : $value ) ); // Set to 'All' when value is -1
+					?><option value="<?php echo esc_attr( $value ); ?>" <?php selected($value, $this->loop_shop_per_page()); ?>><?php
+						$ppp_text = apply_filters('wppp_ppp_text', __('%s products per page', 'woocommerce-products-per-page'), $value);
+						esc_html(printf($ppp_text, $value == -1 ? __('All', 'woocommerce-products-per-page') : $value)); // Set to 'All' when value is -1
 					?></option><?php
 
 				endforeach;
@@ -109,7 +109,7 @@ class WPPP_Front_End {
 				if ( 'ppp' === $key || 'submit' === $key ) :
 					continue;
 				endif;
-				if ( is_array( $val ) ) :
+				if ( is_array($val) ) :
 					foreach( $val as $inner_val ) :
 						?><input type="hidden" name="<?php echo esc_attr( $key ); ?>[]" value="<?php echo esc_attr( $inner_val ); ?>" /><?php
 					endforeach;
@@ -118,11 +118,11 @@ class WPPP_Front_End {
 				endif;
 			endforeach;
 
-			do_action( 'wppp_after_dropdown' );
+			do_action('wppp_after_dropdown');
 
 		?></form><?php
 
-		do_action( 'wppp_after_dropdown_form' );
+		do_action('wppp_after_dropdown_form');
 
 	}
 
@@ -136,9 +136,9 @@ class WPPP_Front_End {
 	 *
 	 * @return int Number of columns.
 	 */
-	public function loop_shop_columns( $columns ) {
+	public function loop_shop_columns($columns) {
 
-		if ( ( $shop_columns = get_option( 'wppp_shop_columns', 0 ) ) > 0 ) :
+		if ( ( $shop_columns = get_option('wppp_shop_columns', 0) ) > 0 ) :
 			$columns = $shop_columns;
 		endif;
 
@@ -158,14 +158,14 @@ class WPPP_Front_End {
 	 */
 	public function loop_shop_per_page() {
 
-		if ( isset( $_REQUEST['wppp_ppp'] ) ) :
-			return intval( $_REQUEST['wppp_ppp'] );
-		elseif ( isset( $_REQUEST['ppp'] ) ) :
-			return intval( $_REQUEST['ppp'] );
-		elseif ( WC()->session->__isset( 'products_per_page' ) ) :
-			return intval( WC()->session->__get( 'products_per_page' ) );
+		if ( isset($_REQUEST['wppp_ppp']) ) :
+			return intval($_REQUEST['wppp_ppp']);
+		elseif ( isset($_REQUEST['ppp']) ) :
+			return intval($_REQUEST['ppp']);
+		elseif ( WC()->session->__isset('products_per_page') ) :
+			return intval(WC()->session->__get('products_per_page'));
 		else :
-			return intval( get_option( 'wppp_default_ppp', '12' ) );
+			return intval(get_option('wppp_default_ppp', '12'));
 		endif;
 
 	}
@@ -182,10 +182,10 @@ class WPPP_Front_End {
 	 * @param	object	$class	Class object.
 	 * @return 	object 			Modified query object.
 	 */
-	public function woocommerce_product_query( $q, $class ) {
+	public function woocommerce_product_query($q, $class) {
 
-		if ( function_exists( 'woocommerce_products_will_display' ) && woocommerce_products_will_display() && $q->is_main_query() ) :
-			$q->set( 'posts_per_page', $this->loop_shop_per_page() );
+		if ( function_exists('woocommerce_products_will_display') && woocommerce_products_will_display() && $q->is_main_query() ) :
+			$q->set('posts_per_page', $this->loop_shop_per_page());
 		endif;
 
 	}
@@ -200,8 +200,8 @@ class WPPP_Front_End {
 	 */
 	public function set_customer_session() {
 
-		if ( WC()->version > '2.1' && ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' ) ) :
-			WC()->session->set_customer_session_cookie( true );
+		if ( WC()->version > '2.1' && ( ! is_admin() || defined('DOING_AJAX') ) && ! defined('DOING_CRON') ) :
+			WC()->session->set_customer_session_cookie(true);
 		endif;
 
 	}
@@ -217,10 +217,10 @@ class WPPP_Front_End {
 	 */
 	public function products_per_page_action() {
 
-		if ( isset( $_REQUEST['wppp_ppp'] ) ) :
-			WC()->session->set( 'products_per_page', intval( $_REQUEST['wppp_ppp'] ) );
-		elseif ( isset( $_REQUEST['ppp'] ) ) :
-			WC()->session->set( 'products_per_page', intval( $_REQUEST['ppp'] ) );
+		if ( isset($_REQUEST['wppp_ppp']) ) :
+			WC()->session->set('products_per_page', intval($_REQUEST['wppp_ppp']));
+		elseif ( isset($_REQUEST['ppp']) ) :
+			WC()->session->set('products_per_page', intval($_REQUEST['ppp']));
 		endif;
 
 	}
